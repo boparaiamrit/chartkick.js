@@ -13,7 +13,7 @@
 
   var config = window.Chartkick || {};
   var Chartkick, DATE_PATTERN, ISO8601_PATTERN, DECIMAL_SEPARATOR, adapters = [];
-  DATE_PATTERN = /(\d\d\d\d)(\-)?(\d\d)(\-)?(\d\d)/i;
+  DATE_PATTERN = /^(\d\d\d\d)(\-)?(\d\d)(\-)?(\d\d)$/i;
 
   // helpers
 
@@ -603,7 +603,7 @@
 
         if (columnType === "datetime" && day) {
           var formatter = new google.visualization.DateFormat({
-            pattern: "MMM dd, yyyy"
+            pattern: "MMM d, yyyy"
           });
           formatter.format(data, 0);
         }
