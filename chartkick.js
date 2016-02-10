@@ -109,9 +109,16 @@
     return false;
   }
 
+  function setDefaultColors(n) {
+    var i, colors = [];
+    for (i = 0; i < n; i++) {
+      colors.push(defaultColors[i * Math.round(36.0 / n)]);
+    }
+    return colors;
+  }
+
   function jsOptionsFunc(defaultOptions, hideLegend, setMin, setMax, setStacked, setXtitle, setYtitle) {
     return function (series, opts, chartOptions) {
-      var colors, i;
       var options = merge({}, defaultOptions);
       options = merge(options, chartOptions || {});
 
@@ -140,12 +147,7 @@
       if (opts.colors) {
         options.colors = opts.colors;
       } else {
-        colors = [];
-        for (i = 0; i < series.length; i++) {
-          colors.push(defaultColors[i * Math.round(36.0 / series.length)]);
-        }
-        console.log(colors);
-        options.colors = colors;
+        options.colors = setDefaultColors(series.length);
       }
 
       if (opts.xtitle) {
@@ -376,6 +378,8 @@
         var chartOptions = {};
         if (chart.options.colors) {
           chartOptions.colors = chart.options.colors;
+        } else {
+          chartOptions.colors = setDefaultColors(chart.data.length);
         }
         var options = merge(merge(defaultOptions, chartOptions), chart.options.library || {});
         options.chart.renderTo = chart.element.id;
@@ -641,6 +645,8 @@
           };
           if (chart.options.colors) {
             chartOptions.colors = chart.options.colors;
+          } else {
+            chartOptions.colors = setDefaultColors(chart.data.length);
           }
           var options = merge(merge(defaultOptions, chartOptions), chart.options.library || {});
 
@@ -744,6 +750,8 @@
 
           if (chart.options.colors) {
             chartOptions.colors = chart.options.colors;
+          } else {
+            chartOptions.colors = setDefaultColors(chart.data.length);
           }
           var options = merge(merge(defaultOptions, chartOptions), chart.options.library || {});
 
