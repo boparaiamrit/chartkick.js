@@ -13,6 +13,14 @@
 
   var config = window.Chartkick || {};
   var Chartkick, ISO8601_PATTERN, DECIMAL_SEPARATOR, adapters = [];
+  var defaultColors = [
+    "#F8766D", "#F17D50", "#E88526", "#DE8C00", "#D39200", "#C69900",
+    "#B79F00", "#A6A400", "#93AA00", "#7CAE00", "#5EB300", "#2BB600",
+    "#00BA38", "#00BC5A", "#00BF74", "#00C08B", "#00C19F", "#00C0B3",
+    "#00BFC4", "#00BDD5", "#00B9E3", "#00B4F0", "#00ADFA", "#00A5FF",
+    "#619CFF", "#8E92FF", "#AE87FF", "#C77CFF", "#DB72FB", "#EA6AF1",
+    "#F564E3", "#FC61D4", "#FF61C3", "#FF64B0", "#FF699C", "#FD6F86"
+  ];
 
   // helpers
 
@@ -103,6 +111,7 @@
 
   function jsOptionsFunc(defaultOptions, hideLegend, setMin, setMax, setStacked, setXtitle, setYtitle) {
     return function (series, opts, chartOptions) {
+      var colors, i;
       var options = merge({}, defaultOptions);
       options = merge(options, chartOptions || {});
 
@@ -130,6 +139,13 @@
 
       if (opts.colors) {
         options.colors = opts.colors;
+      } else {
+        colors = [];
+        for (i = 0; i < series.length; i++) {
+          colors.push(defaultColors[i * Math.round(36.0 / series.length)]);
+        }
+        console.log(colors);
+        options.colors = colors;
       }
 
       if (opts.xtitle) {
