@@ -12,8 +12,8 @@
   'use strict';
 
   var config = window.Chartkick || {};
-  var Chartkick, ISO8601_PATTERN, DECIMAL_SEPARATOR, adapters = [];
-  var adapters = [];
+  var Chartkick, DATE_PATTERN, ISO8601_PATTERN, DECIMAL_SEPARATOR, adapters = [];
+  DATE_PATTERN = /^(\d\d\d\d)(\-)?(\d\d)(\-)?(\d\d)$/i;
 
   // helpers
 
@@ -206,9 +206,15 @@
   }
 
   function toDate(n) {
+    var matches, year, month, day;
     if (typeof n !== "object") {
       if (typeof n === "number") {
         n = new Date(n * 1000); // ms
+      } else if (matches = n.match(DATE_PATTERN)) {
+        year = parseInt(matches[1], 10);
+        month = parseInt(matches[3], 10) - 1;
+        day = parseInt(matches[5], 10);
+        return new Date(year, month, day);
       } else { // str
         // try our best to get the str into iso8601
         // TODO be smarter about this
@@ -557,13 +563,9 @@
 
         // cant use object as key
         var createDataTable = function (series, columnType) {
-          var data = new google.visualization.DataTable();
-          data.addColumn(columnType, "");
-
           var i, j, s, d, key, rows = [];
           for (i = 0; i < series.length; i++) {
             s = series[i];
-            data.addColumn("number", s.name);
 
             for (j = 0; j < s.data.length; j++) {
               d = s.data[j];
@@ -576,11 +578,13 @@
           }
 
           var rows2 = [];
+          var day = true;
           var value;
           for (i in rows) {
             if (rows.hasOwnProperty(i)) {
               if (columnType === "datetime") {
                 value = new Date(toFloat(i));
+                day = day && isDay(value);
               } else if (columnType === "number") {
                 value = toFloat(i);
               } else {
@@ -591,6 +595,14 @@
           }
           if (columnType === "datetime") {
             rows2.sort(sortByTime);
+          }
+
+          // create datatable
+          var data = new google.visualization.DataTable();
+          columnType = columnType === "datetime" && day ? "date" : columnType;
+          data.addColumn(columnType, "");
+          for (i = 0; i < series.length; i++) {
+            data.addColumn("number", s.name);
           }
           data.addRows(rows2);
 
@@ -796,6 +808,10 @@
     }
     return r;
   };
+
+  function isDay(d) {
+    return d.getMilliseconds() + d.getSeconds() + d.getMinutes() + d.getHours() === 0;
+  }
 
   function processSeries(series, opts, keyType) {
     var i;
