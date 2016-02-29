@@ -342,14 +342,25 @@
           options.chart.renderTo = chart.element.id;
 
           var series = chart.data;
+          var day = !chart.options.discrete;
           for (i = 0; i < series.length; i++) {
             data = series[i].data;
             if (!chart.options.discrete) {
               for (j = 0; j < data.length; j++) {
+                day = day && isDay(data[j][0]);
                 data[j][0] = data[j][0].getTime();
               }
             }
             series[i].marker = {symbol: "circle"};
+          }
+          if (day) {
+            for (i = 0; i < series.length; i++) {
+              data = series[i].data;
+              for (j = 0; j < data.length; j++) {
+                var d = new Date(data[j][0]);
+                data[j][0] = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
+              }
+            }
           }
           options.series = series;
           new Highcharts.Chart(options);
