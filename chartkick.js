@@ -384,7 +384,7 @@
           options.chart.renderTo = chart.element.id;
           options.series = [{
             type: "pie",
-            name: "Value",
+            name: chart.options.label || "Value",
             data: chart.data
           }];
           new Highcharts.Chart(options);
@@ -613,7 +613,7 @@
           columnType = columnType === "datetime" && day ? "date" : columnType;
           data.addColumn(columnType, "");
           for (i = 0; i < series.length; i++) {
-            data.addColumn("number", s.name);
+            data.addColumn("number", series[i].name);
           }
           data.addRows(rows2);
 
@@ -722,7 +722,7 @@
 
             var data = new google.visualization.DataTable();
             data.addColumn("string", "");
-            data.addColumn("number", "Value");
+            data.addColumn("number", chart.options.label);
             data.addRows(chart.data);
 
             chart.chart = new google.visualization.GeoChart(chart.element);
@@ -829,7 +829,7 @@
 
     // see if one series or multiple
     if (!isArray(series) || typeof series[0] !== "object" || isArray(series[0])) {
-      series = [{name: "Value", data: series}];
+      series = [{name: opts.label || "Value", data: series}];
       opts.hideLegend = true;
     } else {
       opts.hideLegend = false;

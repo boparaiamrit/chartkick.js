@@ -1,3 +1,8 @@
+## 1.4.2 [unreleased]
+
+- Added `label` option
+- Better tooltip for dates for Google Charts
+
 ## 1.4.1
 
 - Fixed regression with `min: null`
