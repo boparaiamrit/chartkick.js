@@ -563,12 +563,10 @@
       // cant use object as key
       var createDataTable = function (series, columnType) {
         var data = new google.visualization.DataTable();
-        data.addColumn(columnType, "");
 
         var i, j, s, d, key, rows = [];
         for (i = 0; i < series.length; i++) {
           s = series[i];
-          data.addColumn("number", s.name);
 
           for (j = 0; j < s.data.length; j++) {
             d = s.data[j];
@@ -599,14 +597,14 @@
         if (columnType === "datetime") {
           rows2.sort(sortByTime);
         }
-        data.addRows(rows2);
+        columnType = columnType === "datetime" && day ? "date" : columnType;
 
-        if (columnType === "datetime" && day) {
-          var formatter = new google.visualization.DateFormat({
-            pattern: "MMM d, yyyy"
-          });
-          formatter.format(data, 0);
+        // create table
+        data.addColumn(columnType, "");
+        for (i = 0; i < series.length; i++) {
+          data.addColumn("number", s.name);
         }
+        data.addRows(rows2);
 
         return data;
       };
