@@ -3,3 +3,5 @@ dist/
 yarn.lock
 examples/Chart.bundle.js
 *.log
+.idea
+package-lock.json
